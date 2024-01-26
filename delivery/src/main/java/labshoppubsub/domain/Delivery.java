@@ -21,6 +21,8 @@ public class Delivery {
 
     private String customerId;
 
+    private Integer qty;
+
     public static DeliveryRepository repository() {
         DeliveryRepository deliveryRepository = DeliveryApplication.applicationContext.getBean(
             DeliveryRepository.class
