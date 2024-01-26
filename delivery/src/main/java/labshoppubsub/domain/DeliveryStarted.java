@@ -14,6 +14,7 @@ public class DeliveryStarted extends AbstractEvent {
     private Long id;
     private String orderId;
     private String customerId;
+    private Integer qty;
 
     public DeliveryStarted(Delivery aggregate) {
         super(aggregate);
