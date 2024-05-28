@@ -24,6 +24,8 @@ public class Order {
 
     private String customerId;
 
+    private String productName;
+
     private Double amount;
 
     @PostPersist
