@@ -1,38 +1,35 @@
 {
-  "name": "Full Stack Development Environment",
+  "name": "Full Stack Development Environment (No K8s)",
   "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
   
-  "features": {
-    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
-      "version": "latest",
-      "helm": "latest",
-      "minikube": "none"
-    }
-  },
-  
   "onCreateCommand": {
-    "install-tools": "curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl && sudo install kubectl /usr/local/bin/ && rm kubectl && curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash",
-    "setup-docker": "sudo systemctl start docker && sudo usermod -aG docker $USER"
+    "install-httpie": "python3 -m pip install --user httpie httpie-jwt-auth",
+    "install-maven-11": "curl --connect-timeout 30 --max-time 300 -fsSL https://archive.apache.org/dist/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz | sudo tar xz -C /opt && sudo ln -sf /opt/apache-maven-3.9.6/bin/mvn /usr/local/bin/mvn",
+    "install-java-11": "sudo apt-get update -y && sudo apt-get install -y openjdk-11-jdk && sudo update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java && sudo update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-amd64/bin/javac",
+    "setup-docker": "sudo systemctl start docker || true && sudo usermod -aG docker $USER || true",
+    "setup-path": "echo 'export PATH=$HOME/.local/bin:$PATH' >> ~/.bashrc && echo 'export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64' >> ~/.bashrc && echo 'export MAVEN_HOME=/opt/apache-maven-3.9.6' >> ~/.bashrc"
   },
   
-  "postStartCommand": "echo '✅ 개발 환경 준비 완료!' && java -version && mvn -version && docker --version && kubectl version --client",
+  "postStartCommand": "echo '🚀 웹 개발 환경 준비 완료!' && java -version && mvn -version && docker --version && http --version",
   
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-vscode.vscode-java-pack",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
         "ms-vscode.docker",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "ms-vscode.vscode-json",
+        "humao.rest-client",
+        "ms-vscode.rest-client"
       ],
       "settings": {
         "java.configuration.detectJdksAtStart": false,
-        "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m"
+        "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m",
+        "java.home": "/usr/lib/jvm/java-11-openjdk-amd64",
+        "maven.executable.path": "/usr/local/bin/mvn"
       }
     }
   },
   
-  "remoteUser": "codespace",
-  "updateContentCommand": "echo 'Updating...'",
-  "postCreateCommand": "echo 'Environment setup complete'"
+  "remoteUser": "codespace"
 }
