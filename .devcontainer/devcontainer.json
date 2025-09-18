@@ -1,0 +1,38 @@
+{
+  "name": "Full Stack Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  
+  "features": {
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest",
+      "helm": "latest",
+      "minikube": "none"
+    }
+  },
+  
+  "onCreateCommand": {
+    "install-tools": "curl -LO https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl && sudo install kubectl /usr/local/bin/ && rm kubectl && curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash",
+    "setup-docker": "sudo systemctl start docker && sudo usermod -aG docker $USER"
+  },
+  
+  "postStartCommand": "echo '✅ 개발 환경 준비 완료!' && java -version && mvn -version && docker --version && kubectl version --client",
+  
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-java-pack",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-vscode.docker",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "java.configuration.detectJdksAtStart": false,
+        "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m"
+      }
+    }
+  },
+  
+  "remoteUser": "codespace",
+  "updateContentCommand": "echo 'Updating...'",
+  "postCreateCommand": "echo 'Environment setup complete'"
+}
